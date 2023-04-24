@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -15,14 +18,14 @@ const App = () => {
     event.preventDefault()
     const personObject = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: persons.length + 1
     }
 
     let same = false;
 
     for (let person of persons) {
       if ((JSON.stringify(personObject.name) === JSON.stringify(person.name))) {
-        console.log("OUch", person)
         alert(`${newName} is already added to phonebook`)
         setNewName('')
         setNewNumber('')
@@ -37,10 +40,14 @@ const App = () => {
     }
   }
 
-  const handleSearch = (event) => {
-    console.log(event.target.value)
+  const filterHandler = event => 
     setFind(event.target.value)
-  }
+
+  const handleNameChange = event =>
+    setNewName(event.target.value)
+
+  const handleNumberChange = event =>
+    setNewNumber(event.target.value)
 
   const numbersToShow = (find === '')
     ? persons 
@@ -51,37 +58,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      filter shown with <input maxLength="50" value={find} onChange={handleSearch}/>
-      <h2>add a new</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input 
-            pattern="[a-zA-Z]+ [a-zA-Z]+"
-            maxLength="50"
-            required
-            value={newName} 
-            onChange={event => setNewName(event.target.value)} 
-          />
-        </div>
-        <div>
-          number: <input 
-            pattern="[0-9\-]*"
-            maxLength="15"
-            required
-            value={newNumber}
-            onChange={event => setNewNumber(event.target.value)} 
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      {numbersToShow.map(person => 
-        <div key={person.id}>
-          {person.name} {person.number}
-        </div>
-      )}
+      <Filter searchValue={find} filterHandler={filterHandler}/>
+      <h3>add a new</h3>
+      <PersonForm 
+        handleSubmit={addPerson} 
+        newNameValue={newName} 
+        newNumberValue={newNumber} 
+        handleNameChange={handleNameChange} 
+        handleNumberChange={handleNumberChange} 
+      />
+      <h3>Numbers</h3>
+      <Persons personNumbers={numbersToShow} />
     </div>
   )
 }
