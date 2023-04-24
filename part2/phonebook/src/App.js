@@ -12,8 +12,16 @@ const App = () => {
       name: newName
     }
 
-    setPersons(persons.concat(personObject))
-    setNewName('')
+    persons.forEach(person => {
+      if (JSON.stringify(personObject) === JSON.stringify(person)) {
+        alert(`${newName} is already added to phonebook`)
+        setNewName('')
+      }
+      else {
+        setPersons(persons.concat(personObject))
+        setNewName('')  
+      }
+    })
   }
 
   return (
