@@ -28,7 +28,16 @@ const App = () => {
 
     for (let person of persons) {
       if ((JSON.stringify(personObject.name) === JSON.stringify(person.name))) {
-        alert(`${newName} is already added to phonebook`)
+        const isConfirm = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one ?`)
+
+        if (isConfirm) {
+          personsService.update(person.id, personObject)
+          personsService
+            .getAll()
+            .then(response => 
+              setPersons(response)
+            )
+        }
         setNewName('')
         setNewNumber('')
         same = true; 
@@ -39,7 +48,6 @@ const App = () => {
       personsService
         .create(personObject)
         .then(newPerson => {
-          console.log(newPerson)
           setPersons(persons.concat(newPerson))
           setNewName('')
           setNewNumber('')
