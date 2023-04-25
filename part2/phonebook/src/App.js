@@ -12,7 +12,8 @@ const App = () => {
   const [find, setFind] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
+    axios
+      .get('http://localhost:3001/persons')
       .then(response => setPersons(response.data))
   }, [])
 
@@ -20,8 +21,7 @@ const App = () => {
     event.preventDefault()
     const personObject = {
       name: newName,
-      number: newNumber,
-      id: persons.length + 1
+      number: newNumber
     }
 
     let same = false;
@@ -36,9 +36,14 @@ const App = () => {
     }
 
     if (same === false) {
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      axios
+        .post('http://localhost:3001/persons', personObject)
+        .then(response => {
+          console.log(response.data)
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
     }
   }
 
