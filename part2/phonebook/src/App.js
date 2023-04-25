@@ -37,7 +37,7 @@ const App = () => {
 
     if (same === false) {
       personsService
-        .update(personObject)
+        .create(personObject)
         .then(newPerson => {
           console.log(newPerson)
           setPersons(persons.concat(newPerson))
@@ -55,6 +55,15 @@ const App = () => {
 
   const handleNumberChange = event =>
     setNewNumber(event.target.value)
+
+  const handleDelete = (id, name) => {
+    const isConfirm = window.confirm(`Delete ${name} ?`)
+
+    if (isConfirm) {
+      personsService.deletePerson(id)
+      setPersons(persons.filter(person => person.id !== id))
+    }
+  }
 
   const numbersToShow = (find === '')
     ? persons 
@@ -75,7 +84,7 @@ const App = () => {
         handleNumberChange={handleNumberChange} 
       />
       <h3>Numbers</h3>
-      <Persons personNumbers={numbersToShow} />
+      <Persons personNumbers={numbersToShow} handleDelete={handleDelete} />
     </div>
   )
 }
